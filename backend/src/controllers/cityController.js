@@ -7,6 +7,10 @@ async function createCity(name, size) {
     });
 }
 
+async function getAllCities() {
+    return await prisma.city.findMany();
+}
+
 // Получение всех городов
 async function getCity(id) {
     return await prisma.city.findUnique({
@@ -16,4 +20,4 @@ async function getCity(id) {
     });
 }
 
-module.exports = { createCity, getCity }
+module.exports = { createCity, getAllCities, getCity }

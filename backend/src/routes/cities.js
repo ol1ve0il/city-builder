@@ -1,11 +1,24 @@
 const express = require('express');
 const router = express.Router();
 
-const { createCity, getCity } = require('../controllers/cityController');
+const { createCity, getAllCities, getCity } = require('../controllers/cityController');
 
 const buildingsRouter = require('./buildings.js')
 
 router.use('/:id/buildings', buildingsRouter); // Подключаем маршруты для построек
+
+router.get('/', async (req, res) => {
+    try {
+        const allCities = await getAllCities();
+        if (allCities.length > 0) {
+            res.json(allCities);
+        } else {
+            res.status(404).json({ error: 'Ничего не найдено' })
+        }
+    } catch {
+        res.status(500).json({ error: 'Ошибка сервера' });
+    }
+})
 
 // Получение информации о городе
 router.get('/:id', async (req, res) => {
