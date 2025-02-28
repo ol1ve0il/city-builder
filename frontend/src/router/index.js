@@ -5,7 +5,7 @@ import CityDetailView from '../views/CityDetailView.vue'
 
 const routes = [
   { path: '/', component: CitiesView },
-  { path: '/:id', component: CityDetailView },
+  { path: '/cities/:id', component: CityDetailView },
 ]
 
 const router = createRouter({
