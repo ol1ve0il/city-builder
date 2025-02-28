@@ -1,0 +1,16 @@
+-- CreateTable
+CREATE TABLE "City" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL,
+    "size" TEXT NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "Building" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL,
+    "x" REAL NOT NULL,
+    "y" REAL NOT NULL,
+    "cityId" INTEGER NOT NULL,
+    CONSTRAINT "Building_cityId_fkey" FOREIGN KEY ("cityId") REFERENCES "City" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
