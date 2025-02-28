@@ -5,8 +5,6 @@ import { useCitiesStore } from '../stores/cities';
 
 import CityCreateForm from '../components/CityCreateForm.vue'
 import CityCard from '../components/CityCard.vue'
-import MapView from '../components/MapView.vue';
-
 
 const router = useRouter();
 
@@ -33,8 +31,6 @@ function createCity(newCity) {
 
 <template>
     <div>
-        <MapView :cities="cityStore.cities" />
-
         <CityCreateForm @submit="createCity" />
         <CityCard :key="city.id" v-for="city in cityStore.cities" :city="city" @select-city="goToCity" />
     </div>

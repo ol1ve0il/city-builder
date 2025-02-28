@@ -1,4 +1,5 @@
 <script setup>
+import { ref, watch, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { useCitiesStore } from '../stores/cities';
@@ -13,9 +14,17 @@ const cityId = route.params.id;
 const cityStore = useCitiesStore();
 const buildingStore = useBuildingsStore();
 
-const selectedCity = cityStore.selectedCity;
+const selectedCity = ref(null);
 
-buildingStore.fetchBuildingsByCity(cityId);
+watch(() => cityStore.selectedCity, (newCity) => {
+  if (newCity) {
+    selectedCity.value = newCity;
+  }
+});
+
+onMounted(() => {
+    buildingStore.fetchBuildingsByCity(cityId);
+})
 
 function createBuilding(newBuilding) {
     buildingStore.createBuilding(cityId, newBuilding.name, newBuilding.x, newBuilding.y)
@@ -23,6 +32,10 @@ function createBuilding(newBuilding) {
 </script>
 
 <template>
-    <BuildingCreateForm @submit="createBuilding"/>
-    <BuildingCard :key="building.id" v-for="building in buildingStore.buildings" :building="building"/>
+    <div v-if="selectedCity">
+        <div>{{ selectedCity.name }}</div>
+        <BuildingCreateForm @submit="createBuilding"/>
+        <BuildingCard :key="building.id" v-for="building in buildingStore.buildings" :building="building"/>
+    </div>
+    <p v-else>Загрузка данных...</p>
 </template>
