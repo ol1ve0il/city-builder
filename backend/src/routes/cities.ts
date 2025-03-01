@@ -1,9 +1,9 @@
-const express = require('express');
+import express from 'express'
+import buildingsRouter from './buildings'
+import { City } from '../models/city';
 const router = express.Router();
 
 const { createCity, getAllCities, getCity } = require('../controllers/cityController');
-
-const buildingsRouter = require('./buildings.js')
 
 router.use('/:id/buildings', buildingsRouter); // Подключаем маршруты для построек
 
@@ -24,7 +24,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     const cityId = req.params.id;
     try {
-        const city = await getCity(cityId);
+        const city: City = await getCity(cityId);
         if (city) {
             res.json(city);
         } else {
@@ -37,13 +37,13 @@ router.get('/:id', async (req, res) => {
 
 // Создание нового города
 router.post('/', async (req, res) => { 
-    const { name, size } = req.body;
+    const newCity: City = req.body;
     try {
-        const newCity = await createCity(name, size);
-        res.status(201).json(newCity);
+        const newCityResponse = await createCity(newCity);
+        res.status(201).json(newCityResponse);
     } catch (error) {
         res.status(500).json({ error: 'Ошибка при создании города' });
     }
 });
 
-module.exports = router;
+export default router;

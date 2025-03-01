@@ -24,7 +24,7 @@ function goToCity(id) {
 }
 
 function createCity(newCity) {
-    cityStore.createCity(newCity.name, newCity.size);
+    cityStore.createCity(newCity);
 }
 
 </script>

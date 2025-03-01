@@ -1,9 +1,14 @@
-const express = require('express');
+import express, { Request, Response } from 'express'
+import { Building } from '../models/building';
 const router = express.Router({ mergeParams: true });
 const { createBuilding, getBuildings } = require('../controllers/buildingController'); // Импортируем функции
 
+interface BuildingParams {
+    id: string; 
+}
+
 // Получение всех построек в городе
-router.get('/', async (req, res) => {
+router.get('/', async (req: Request<BuildingParams>, res: Response) => {
     const cityId = req.params.id;
     try {
         const buildings = await getBuildings(cityId);
@@ -19,14 +24,13 @@ router.get('/', async (req, res) => {
 
 // Добавление нового здания в город
 router.post('/', async (req, res) => {
-    const cityId = req.params.id;
-    const { name, x, y } = req.body;
+    const newBuilding: Building = req.body;
     try {
-        const newBuilding = await createBuilding(cityId, name, x, y);
-        res.status(201).json(newBuilding);
+        const newBuildingResponse = await createBuilding(newBuilding);
+        res.status(201).json(newBuildingResponse);
     } catch (error) {
         res.status(500).json({ error: 'Ошибка при создании постройки' });
     }
 });
 
-module.exports = router;
+export default router

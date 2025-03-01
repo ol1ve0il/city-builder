@@ -10,7 +10,7 @@ datasource db {
 model City {
   id        Int       @id @default(autoincrement())
   name      String
-  size      String
+  size      CitySize
   buildings Building[]
 }
 
@@ -18,7 +18,31 @@ model Building {
   id       Int    @id @default(autoincrement())
   name     String
   x        Float
-  y        Float
+  z        Float
+  width    Float
+  height   Float
+  depth    Float
+
+  color    String?   // HEX-код, если нет текстуры
+  modelUrl String?   // Ссылка на 3D-модель, если есть
+  rotation Float?    // Угол поворота (по оси Y)
+  
+  type     BuildingType
+
   cityId   Int
   city     City   @relation(fields: [cityId], references: [id])
+}
+
+enum CitySize {
+  SMALL
+  MEDIUM
+  LARGE
+  HUGE
+}
+
+enum BuildingType {
+  HOUSE
+  OFFICE
+  SHOP
+  FACTORY
 }

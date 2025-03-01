@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import cityRouter from './routes/cities'
+
 const cors = require('cors');
-const cityRouter = require('./routes/cities.js');
 
 const app = express();
 

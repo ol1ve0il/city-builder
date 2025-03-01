@@ -1,19 +1,17 @@
-const prisma = require('../prisma');
-
+import { City } from '@prisma/client';
+import { Building } from '../models/building';
+import prisma from '../prisma'
 // Создание постройки в городе
-async function createBuilding(cityId, name, x, y) {
+async function createBuilding(newBuilding: Building) {
     return await prisma.building.create({
         data: { 
-            cityId: Number(cityId), 
-            name, 
-            x: Number(x), 
-            y: Number(y),
+            newBuilding
         },
     });
 }
 
 // Получение всех построек в городе
-async function getBuildings(cityId) {
+async function getBuildings(cityId: Building['cityId']) {
     return await prisma.building.findMany({
         where: {
             cityId: Number(cityId),

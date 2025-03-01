@@ -4,9 +4,7 @@ import { useRoute } from 'vue-router';
 
 import { useCitiesStore } from '../stores/cities';
 import { useBuildingsStore } from '../stores/buildings';
-
-import BuildingCreateForm from '../components/BuildingCreateForm.vue'
-import BuildingCard from '../components/BuildingCard.vue'
+import CityScene from '../components/CityScene.vue';
 
 const route = useRoute();
 const cityId = route.params.id;
@@ -16,26 +14,29 @@ const buildingStore = useBuildingsStore();
 
 const selectedCity = ref(null);
 
-watch(() => cityStore.selectedCity, (newCity) => {
+watch(() => cityStore.selectedCity, async (newCity) => {
   if (newCity) {
     selectedCity.value = newCity;
   }
 });
 
 onMounted(() => {
-    buildingStore.fetchBuildingsByCity(cityId);
+  buildingStore.fetchBuildingsByCity(cityId);
 })
 
-function createBuilding(newBuilding) {
-    buildingStore.createBuilding(cityId, newBuilding.name, newBuilding.x, newBuilding.y)
-}
 </script>
 
 <template>
-    <div v-if="selectedCity">
-        <div>{{ selectedCity.name }}</div>
-        <BuildingCreateForm @submit="createBuilding"/>
-        <BuildingCard :key="building.id" v-for="building in buildingStore.buildings" :building="building"/>
-    </div>
-    <p v-else>Загрузка данных...</p>
+  <div v-if="selectedCity && buildingStore.buildings.length > 0">
+    <h2>{{ selectedCity.name }}</h2>
+    <CityScene :buildings="buildingStore.buildings"/>
+  </div>
+  <p v-else>Загрузка данных...</p>
 </template>
+
+<style scoped>
+.three-container {
+  width: 100%;
+  height: 100vh;
+}
+</style>

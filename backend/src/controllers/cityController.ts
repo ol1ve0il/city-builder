@@ -1,9 +1,9 @@
-const prisma = require('../prisma');
-
+import { City } from '../models/city';
+import prisma from '../prisma'
 // Создание города
-async function createCity(name, size) {
+async function createCity(newCity: City) {
     return await prisma.city.create({
-        data: { name, size },
+        data: newCity,
     });
 }
 
@@ -12,7 +12,7 @@ async function getAllCities() {
 }
 
 // Получение всех городов
-async function getCity(id) {
+async function getCity(id: City['id']) {
     return await prisma.city.findUnique({
         where: {
             id: Number(id),

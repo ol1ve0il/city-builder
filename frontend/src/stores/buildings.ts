@@ -1,12 +1,15 @@
 import { defineStore } from "pinia";
 import axios from 'axios';
 
+import { Building } from "../models/building";
+import { City } from "../models/city";
+
 export const useBuildingsStore = defineStore('buildingStore', {
     state: () => ({
-        buildings: [],
+        buildings: [] as Building[],
     }),
     actions: {
-        async fetchBuildingsByCity(cityId) {
+        async fetchBuildingsByCity(cityId: City['id']) {
             try {
                 const response = await axios.get(`http://localhost:3000/cities/${cityId}/buildings`)
                 this.buildings = response.data
@@ -14,9 +17,9 @@ export const useBuildingsStore = defineStore('buildingStore', {
                 console.error('Ошибка при загрузке построек города:', error);
             }
         },
-        async createBuilding(cityId, name, x, y) {
+        async createBuilding(cityId: City['id'], building: Building) {
             try {
-                const response = await axios.post(`http://localhost:3000/cities/${cityId}/buildings`, { name, x, y })
+                const response = await axios.post(`http://localhost:3000/cities/${cityId}/buildings`, building)
                 this.buildings.push(response.data);
             } catch (error) {
                 console.error('Ошибка при создании постройки:', error);
