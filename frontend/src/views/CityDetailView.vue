@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router';
 import { useCitiesStore } from '../stores/cities';
 import { useBuildingsStore } from '../stores/buildings';
 import CityScene from '../components/CityScene.vue';
+import CitySceneToolbar from '../components/CitySceneToolbar.vue';
 
 const route = useRoute();
 const cityId = route.params.id;
@@ -14,7 +15,7 @@ const buildingStore = useBuildingsStore();
 
 const selectedCity = ref(null);
 
-watch(() => cityStore.selectedCity, async (newCity) => {
+watch(() => cityStore.selectedCity, (newCity) => {
   if (newCity) {
     selectedCity.value = newCity;
   }
@@ -27,16 +28,27 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="selectedCity && buildingStore.buildings.length > 0">
-    <h2>{{ selectedCity.name }}</h2>
-    <CityScene :buildings="buildingStore.buildings"/>
+  <div v-if="selectedCity">
+    <div class="scene-block">
+      <CitySceneToolbar class="scene-toolbar" :params="['X', 'Y', 'W', 'H', 'D', 'R']" />
+      <CityScene class="scene-interface" :buildings="buildingStore.buildings" />
+    </div>
   </div>
-  <p v-else>Загрузка данных...</p>
+  <p v-else class="loading-message">Загрузка данных...</p>
 </template>
 
 <style scoped>
-.three-container {
-  width: 100%;
-  height: 100vh;
+.scene-block {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  align-items: flex-start;
+}
+
+.loading-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+  padding: 20px;
 }
 </style>

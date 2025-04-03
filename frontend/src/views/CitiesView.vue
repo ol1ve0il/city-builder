@@ -3,8 +3,7 @@ import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCitiesStore } from '../stores/cities';
 
-import CityCreateForm from '../components/CityCreateForm.vue'
-import CityCard from '../components/CityCard.vue'
+import CitiesTable from '../components/CitiesTable.vue';
 
 const router = useRouter();
 
@@ -22,16 +21,18 @@ function goToCity(id) {
         console.log(error)
     }
 }
-
-function createCity(newCity) {
-    cityStore.createCity(newCity);
-}
-
 </script>
 
 <template>
-    <div>
-        <CityCreateForm @submit="createCity" />
-        <CityCard :key="city.id" v-for="city in cityStore.cities" :city="city" @select-city="goToCity" />
+    <div class="cities-view">
+        <CitiesTable :headers="['id', 'name', 'size']" :cities="cityStore.cities" @select-city="goToCity" />
     </div>
 </template>
+
+<style scoped>
+.cities-view {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+</style>
