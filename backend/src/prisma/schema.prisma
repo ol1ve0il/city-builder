@@ -16,7 +16,6 @@ model City {
 
 model Building {
   id       Int    @id @default(autoincrement())
-  name     String
   x        Float
   z        Float
   width    Float

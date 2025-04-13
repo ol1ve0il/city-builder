@@ -19,7 +19,6 @@ export const useCitiesStore = defineStore('cityStore', {
             }
         },
         async createCity(city: City) {
-            console.log(city)
             try {
                 const response = await axios.post('http://localhost:3000/cities', city)
                 this.cities.push(response.data);

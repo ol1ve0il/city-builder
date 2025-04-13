@@ -1,10 +1,17 @@
 <script setup>
 
-const props = defineProps(['params']);
+const props = defineProps(['params', 'selectedBuilding']);
+const emits = defineEmits(['createBuilding', 'removeBuilding', 'updateBuilding']);
 
-const createBuilding = () => console.log("Создание здания");
-const editBuilding = () => console.log("Редактирование здания");
-const removeBuilding = () => console.log("Удаление здания");
+const createBuilding = () => emits('createBuilding');
+const removeBuilding = () => emits('removeBuilding');
+const updateBuilding = (value) => console.log(value.target.value);
+
+const getBuildingValue = (params, param) => {
+    if (!props.selectedBuilding) return
+    const entry = Object.entries(params).find(([key, value]) => value === param);
+    return entry ? props.selectedBuilding[entry[0]] : undefined;
+}
 
 </script>
 
@@ -14,15 +21,20 @@ const removeBuilding = () => console.log("Удаление здания");
 
         <div class="toolbar-buttons">
             <button @click="createBuilding">Создать</button>
-            <button @click="editBuilding">Редактировать</button>
-            <button @click="removeBuilding">Удалить</button>
+            <button @click="removeBuilding" :disabled="selectedBuilding == null">Удалить</button>
         </div>
 
         <h3 class="toolbar-title">Позиция</h3>
         <div class="toolbar-position">
             <div v-for="param in params" :key="param" class="input-container">
                 <label :for="`input-${param}`">{{ param }}</label>
-                <input type="number" :id="`input-${param}`" />
+                <input 
+                    :disabled="selectedBuilding == null" 
+                    type="number" 
+                    :id="`input-${param}`" 
+                    :value="getBuildingValue(params, param)"
+                    @input="updateBuilding"
+                />
             </div>
         </div>
     </div>

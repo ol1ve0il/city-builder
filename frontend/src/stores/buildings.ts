@@ -24,6 +24,24 @@ export const useBuildingsStore = defineStore('buildingStore', {
             } catch (error) {
                 console.error('Ошибка при создании постройки:', error);
             }
+        },
+        async updateBuilding(cityId: City['id'], id: Building['id'], newData: Building) {
+            try {
+                const response = await axios.post(`http://localhost:3000/cities/${cityId}/buildings/${id}`, newData)
+                const updatedBuildingIndex = this.buildings.findIndex(building => building.id == id);
+
+                this.buildings[updatedBuildingIndex] = response.data;
+            } catch (error) {
+                console.error('Ошибка при изменении постройки', error)
+            }
+        },
+        async removeBuilding(cityId: City['id'], id: Building['id']) {
+            try {
+                await axios.delete(`http://localhost:3000/cities/${cityId}/buildings/${id}`)
+                this.buildings = this.buildings.filter((building) => building.id !== id)
+            } catch (error) {
+                console.error('Ошибка при удалении постройки:', error);
+            }
         }
     }
 })
