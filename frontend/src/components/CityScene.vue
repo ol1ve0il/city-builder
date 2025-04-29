@@ -3,12 +3,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useCityScene } from '../composables/useCityScene';
+import { ref } from 'vue'
+import { useCityScene } from '../composables/useCityScene'
 
-const threeContainer = ref<HTMLElement | null>(null);
+const threeContainer = ref<HTMLElement | null>(null)
 
-useCityScene(threeContainer);
+useCityScene(threeContainer)
 </script>
 
 <style scoped>
