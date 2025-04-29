@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:node": "npx ts-node src/server.ts",
+    "build:prisma": "cd src && npx prisma migrate dev --name init",
+    "prisma:dev": "cd src && npx prisma studio",
+    "build:all": "npm run build:prisma && npm run build:node"
   },
   "keywords": [],
   "author": "",
