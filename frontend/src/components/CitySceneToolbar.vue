@@ -1,44 +1,103 @@
-<script setup>
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useBuildingsStore } from '../stores/buildings';
+import type { Building } from '../models/building';
 
-const props = defineProps(['params', 'selectedBuilding']);
-const emits = defineEmits(['createBuilding', 'removeBuilding', 'updateBuilding']);
+const props = defineProps<{ cityId: number }>();
 
-const createBuilding = () => emits('createBuilding');
-const removeBuilding = () => emits('removeBuilding');
-const updateBuilding = (value) => console.log(value.target.value);
+// Ключи полей и их подписи
+const params: Record<keyof Pick<Building, 'x' | 'z' | 'width' | 'height' | 'depth' | 'rotation'>, string> = {
+  x: 'X',
+  z: 'Z',
+  width: 'W',
+  height: 'H',
+  depth: 'D',
+  rotation: 'R',
+};
 
-const getBuildingValue = (params, param) => {
-    if (!props.selectedBuilding) return
-    const entry = Object.entries(params).find(([key, value]) => value === param);
-    return entry ? props.selectedBuilding[entry[0]] : undefined;
-}
+const buildingStore = useBuildingsStore();
+const { selectedBuilding } = storeToRefs(buildingStore);
 
+// Локальное состояние ввода
+const inputValues = ref<Record<string, number>>({});
+
+// Создание
+const createBuilding = () => buildingStore.createBuilding(props.cityId, {
+  cityId: props.cityId,
+  type: 'FACTORY',
+  width: 2,
+  height: 5,
+  depth: 2,
+  x: 0,
+  z: 0,
+  color: "#121212"
+});
+
+// Удаление
+const removeBuilding = () => {
+  if (selectedBuilding.value) {
+    buildingStore.removeBuilding(props.cityId, selectedBuilding.value.id);
+  }
+};
+
+// Заполняем при выборе здания
+watch(selectedBuilding, (newBuilding) => {
+  if (newBuilding) {
+    inputValues.value = {
+      x: newBuilding.x,
+      z: newBuilding.z,
+      width: newBuilding.width,
+      height: newBuilding.height,
+      depth: newBuilding.depth,
+      rotation: newBuilding.rotation || 0,
+    };
+  } else {
+    inputValues.value = {};
+  }
+});
+
+// Отправка данных при Enter или blur
+const submitParam = (key: keyof Building) => {
+  if (!selectedBuilding.value) return;
+  const newValue = inputValues.value[key];
+  if (newValue !== selectedBuilding.value[key]) {
+    buildingStore.updateBuilding(props.cityId, selectedBuilding.value.id, {
+      [key]: newValue,
+    });
+  }
+};
 </script>
 
 <template>
     <div class="toolbar-block">
-        <h3 class="toolbar-title">Управление</h3>
-
-        <div class="toolbar-buttons">
-            <button @click="createBuilding">Создать</button>
-            <button @click="removeBuilding" :disabled="selectedBuilding == null">Удалить</button>
+      <h3 class="toolbar-title">Управление</h3>
+      <div class="toolbar-buttons">
+        <button @click="createBuilding">Создать</button>
+        <button @click="removeBuilding" :disabled="selectedBuilding == null">Удалить</button>
+      </div>
+  
+      <h3 class="toolbar-title">Позиция</h3>
+      <div class="toolbar-position">
+        <div
+          v-for="[key, label] in Object.entries(params)"
+          :key="key"
+          class="input-container"
+        >
+          <label :for="`input-${key}`">{{ label }}</label>
+          <input
+            :disabled="!selectedBuilding"
+            type="number"
+            :id="`input-${key}`"
+            v-model="inputValues[key]"
+            @keydown.enter="submitParam(key)"
+            @blur="submitParam(key)"
+            />
         </div>
-
-        <h3 class="toolbar-title">Позиция</h3>
-        <div class="toolbar-position">
-            <div v-for="param in params" :key="param" class="input-container">
-                <label :for="`input-${param}`">{{ param }}</label>
-                <input 
-                    :disabled="selectedBuilding == null" 
-                    type="number" 
-                    :id="`input-${param}`" 
-                    :value="getBuildingValue(params, param)"
-                    @input="updateBuilding"
-                />
-            </div>
-        </div>
+      </div>
     </div>
-</template>
+  </template>
+  
 
 <style scoped>
 .toolbar-block {

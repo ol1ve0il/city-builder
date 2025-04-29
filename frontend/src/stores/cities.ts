@@ -26,13 +26,8 @@ export const useCitiesStore = defineStore('cityStore', {
                 console.error('Ошибка при создании города:', error);
             }
         },
-        async selectCity(id: City["id"]) {
-            try {
-                const response = await axios.get(`http://localhost:3000/cities/${id}`)
-                this.selectedCity = response.data
-            } catch (error) {
-                console.error('Ошибка получения данных о городе:', error);
-            }
+        selectCity(id: City["id"]) {
+            this.selectedCity = this.cities.find((city) => city.id == id) || null;
         }
     }
 })

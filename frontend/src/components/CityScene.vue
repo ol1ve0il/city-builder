@@ -3,15 +3,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs } from 'vue';
+import { ref } from 'vue';
 import { useCityScene } from '../composables/useCityScene';
 
-const props = defineProps<{ buildings: any[] }>();
-const emits = defineEmits(['select-building', 'update-building']);
-const { buildings } = toRefs(props);
 const threeContainer = ref<HTMLElement | null>(null);
 
-useCityScene(threeContainer, buildings, emits);
+useCityScene(threeContainer);
 </script>
 
 <style scoped>

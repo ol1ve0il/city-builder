@@ -1,9 +1,14 @@
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Building } from '../models/building';
+import { useBuildingsStore } from '../stores/buildings';
+import { storeToRefs } from 'pinia';
 
-export function useCityScene(containerRef: any, buildings: any, emit: any) {
+export function useCityScene(containerRef: any) {
+  const buildingStore = useBuildingsStore()
+  const { buildings } = storeToRefs(buildingStore);
+
   const scene = new THREE.Scene();
   const renderer = ref<THREE.WebGLRenderer | null>(null);
   const camera = ref<THREE.PerspectiveCamera | null>(null);
@@ -14,7 +19,7 @@ export function useCityScene(containerRef: any, buildings: any, emit: any) {
   const isDragging = ref(false);
 
   const buildingMeshes: THREE.Mesh[] = [];
-  const selectedBuildingID = ref<number | null>(null);
+  const selectedBuildingID = computed(() => buildingStore.selectedBuilding?.id);
 
   const sceneSize = { x: 50, z: 50 };
   const gridSize = 1;
@@ -174,10 +179,7 @@ export function useCityScene(containerRef: any, buildings: any, emit: any) {
 
       const selectedMesh = findSelectedBuilding();
       if (selectedMesh) {
-        emit('update-building', selectedBuildingID.value, {
-          x: selectedMesh.position.x,
-          z: selectedMesh.position.z
-        });
+        buildingStore.updateBuilding(buildingStore.selectedBuilding!.cityId, buildingStore.selectedBuilding!.id, {x: selectedMesh.position.x, z: selectedMesh.position.z})
       }
     }
   }
@@ -194,14 +196,12 @@ export function useCityScene(containerRef: any, buildings: any, emit: any) {
 
     if (intersects.length > 0) {
       const selectedObject = intersects[0].object as THREE.Mesh;
-      selectedBuildingID.value = selectedObject.userData.id;
-      emit('select-building', selectedBuildingID.value);
+      buildingStore.selectBuilding(selectedObject.userData.id)
 
     } else {
       // Если кликнули в пустоту, сбрасываем выделение
       if (selectedBuildingID.value) {
-        selectedBuildingID.value = null;
-        emit('select-building', -1);
+        buildingStore.selectBuilding(-1);
       }
     }
   }
