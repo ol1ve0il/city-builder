@@ -4,23 +4,10 @@ import './app.css'
 </script>
 
 <template>
-  <div class="wrapper">
+  <div class="flex flex-col min-h-screen">
     <AppHeader />
-    <div class="wrapper-content">
+    <div class="flex-1 pt-[60px]">
       <RouterView />
     </div>
   </div>
 </template>
-
-<style scoped>
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.wrapper-content {
-  flex: 1;
-  padding-top: 60px; /* Отступ, чтобы контент не залазил под шапку */
-}
-</style>

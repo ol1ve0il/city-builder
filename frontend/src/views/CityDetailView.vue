@@ -19,21 +19,8 @@ const buildingsLoaded = computed(() => buildingStore.buildings.length > 0)
 </script>
 
 <template>
-  <div class="scene-block" v-if="buildingsLoaded">
-    <CitySceneToolbar class="scene-toolbar" :cityId="cityId" />
+  <div class="flex gap-[20px] p-[20px] items-start" v-if="buildingsLoaded">
+    <CitySceneToolbar :cityId="cityId" />
     <CityScene class="scene-interface" />
   </div>
 </template>
-
-<style scoped>
-.scene-block {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-  align-items: flex-start;
-}
-
-.scene-toolbar {
-  min-width: 250px;
-}
-</style>

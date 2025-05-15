@@ -74,90 +74,46 @@ const submitParam = (key: keyof Building) => {
 </script>
 
 <template>
-  <div class="toolbar-block">
-    <h3 class="toolbar-title">Управление</h3>
-    <div class="toolbar-buttons">
-      <button @click="createBuilding">Создать</button>
-      <button @click="removeBuilding" :disabled="selectedBuilding == null">Удалить</button>
+  <div class="w-64 bg-white p-4 rounded-xl shadow space-y-4 text-sm border border-gray-200">
+    <div>
+      <h3 class="text-lg font-semibold text-gray-800 mb-2">Управление</h3>
+      <div class="flex flex-col gap-2">
+        <button
+          @click="createBuilding"
+          class="bg-blue-600 hover:bg-blue-700 text-white rounded px-4 py-2 transition"
+        >
+          Создать
+        </button>
+        <button
+          @click="removeBuilding"
+          :disabled="selectedBuilding == null"
+          class="bg-red-500 hover:bg-red-600 text-white rounded px-4 py-2 transition disabled:opacity-50"
+        >
+          Удалить
+        </button>
+      </div>
     </div>
 
-    <h3 class="toolbar-title">Позиция</h3>
-    <div class="toolbar-position">
-      <div v-for="[key, label] in Object.entries(params)" :key="key" class="input-container">
-        <label :for="`input-${key}`">{{ label }}</label>
-        <input
-          :disabled="!selectedBuilding"
-          type="number"
-          :id="`input-${key}`"
-          v-model="inputValues[key]"
-          @keydown.enter="submitParam(key)"
-          @blur="submitParam(key)"
-        />
+    <div>
+      <h3 class="text-lg font-semibold text-gray-800 mb-2">Позиция</h3>
+      <div class="grid grid-cols-2 gap-3">
+        <div
+          v-for="[key, label] in Object.entries(params)"
+          :key="key"
+          class="flex flex-col"
+        >
+          <label :for="`input-${key}`" class="text-gray-500 text-xs mb-1">{{ label }}</label>
+          <input
+            :disabled="!selectedBuilding"
+            type="number"
+            :id="`input-${key}`"
+            v-model="inputValues[key]"
+            @keydown.enter="submitParam(key)"
+            @blur="submitParam(key)"
+            class="border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring focus:ring-blue-200 text-sm"
+          />
+        </div>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.toolbar-block {
-  width: 250px;
-  background: #f8f9fa;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden; /* Чтобы ничего не выходило за пределы */
-}
-
-.toolbar-title {
-  font-size: 1rem;
-  margin-bottom: 10px;
-  color: #333;
-}
-
-.toolbar-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-button {
-  padding: 8px;
-  border: none;
-  border-radius: 5px;
-  background: #007bff;
-  color: white;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-button:hover {
-  background: #0056b3;
-}
-
-.toolbar-position {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* Используем две колонки */
-  gap: 10px;
-  max-width: 100%; /* Ограничиваем ширину, чтобы поля не вылезали */
-}
-
-.input-container {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-label {
-  font-size: 0.9rem;
-  color: #666;
-}
-
-input {
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 100%; /* Ограничиваем ширину поля */
-  box-sizing: border-box; /* Учитываем padding и border в расчете ширины */
-}
-</style>

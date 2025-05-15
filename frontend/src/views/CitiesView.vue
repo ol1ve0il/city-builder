@@ -24,7 +24,7 @@ function goToCity(id) {
 </script>
 
 <template>
-  <div class="cities-view">
+  <div class="flex justify-center p-5">
     <CitiesTable
       :headers="['id', 'name', 'size']"
       :cities="cityStore.cities"
@@ -32,11 +32,3 @@ function goToCity(id) {
     />
   </div>
 </template>
-
-<style scoped>
-.cities-view {
-  display: flex;
-  justify-content: center;
-  padding: 20px;
-}
-</style>
